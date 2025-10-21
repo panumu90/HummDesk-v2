@@ -43,7 +43,8 @@ export async function registerRoutes(fastify: FastifyInstance): Promise<void> {
   await fastify.register(authRoutes, { prefix: `${API_PREFIX}/auth` });
 
   // Conversations routes (protected - requires auth + tenant)
-  await fastify.register(conversationsRoutes, { prefix: `${API_PREFIX}/conversations` });
+  // TODO: Refactor to use PostgreSQL instead of Supabase
+  // await fastify.register(conversationsRoutes, { prefix: `${API_PREFIX}/conversations` });
 
   // Messages routes (protected - requires auth + tenant)
   await fastify.register(messagesRoutes, { prefix: API_PREFIX });
@@ -52,7 +53,8 @@ export async function registerRoutes(fastify: FastifyInstance): Promise<void> {
   await fastify.register(aiRoutes, { prefix: `${API_PREFIX}/ai` });
 
   // AI Supabase routes (public - for agent webhook integration)
-  await fastify.register(aiSupabaseRoutes, { prefix: `${API_PREFIX}/ai/drafts` });
+  // TODO: Refactor to use PostgreSQL instead of Supabase
+  // await fastify.register(aiSupabaseRoutes, { prefix: `${API_PREFIX}/ai/drafts` });
 
   // Teams routes (protected - requires auth + tenant)
   await fastify.register(teamsRoutes, { prefix: `${API_PREFIX}/teams` });

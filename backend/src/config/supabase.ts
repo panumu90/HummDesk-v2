@@ -1,22 +1,28 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { createClient } from '@supabase/supabase-js';
+import pg from 'pg';
+const { Pool } = pg;
 
-// Supabase configuration
-const supabaseUrl = process.env.SUPABASE_URL || '';
-const supabaseKey = process.env.SUPABASE_ANON_KEY || '';
-
-if (!supabaseUrl || !supabaseKey) {
-  console.warn('⚠️  Supabase credentials missing. Add SUPABASE_URL and SUPABASE_ANON_KEY to .env');
-}
-
-// Create Supabase client
-export const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: {
-    persistSession: false, // Server-side, no session persistence needed
-  },
+// PostgreSQL connection pool (Neon or any PostgreSQL)
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.DATABASE_URL?.includes('neon.tech')
+    ? { rejectUnauthorized: false }
+    : false,
 });
+
+// Test connection
+pool.on('connect', () => {
+  console.log('✅ PostgreSQL connected');
+});
+
+pool.on('error', (err) => {
+  console.error('❌ PostgreSQL error:', err);
+});
+
+// Export pool as default and named export for compatibility
+export const db = pool;
 
 // Database types
 export interface Conversation {
@@ -75,5 +81,3 @@ export interface Agent {
   status: 'online' | 'away' | 'busy' | 'offline';
   created_at: string;
 }
-
-export default supabase;

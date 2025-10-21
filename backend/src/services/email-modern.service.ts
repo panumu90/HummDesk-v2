@@ -9,9 +9,15 @@
  */
 
 import { Resend } from 'resend';
-import { supabase } from '../config/supabase.js';
+import { db } from '../config/supabase.js';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
+
+if (!resend) {
+  console.warn('⚠️  Resend API key missing. Email sending disabled.');
+}
 
 export interface EmailMessage {
   from: string;
